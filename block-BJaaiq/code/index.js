@@ -1,10 +1,10 @@
 let root = document.querySelector('ul');
 
-let max = 5;
+let max = 3 ;
 let index = 0;
 
 function addQuotes() {
-  for (index=0; index < 5; index++) {
+  for (let i=0; i < max; i++) {
     let li = document.createElement('li');
     let blockquote = document.createElement('blockquote');
     let cite = document.createElement('cite');
@@ -12,9 +12,11 @@ function addQuotes() {
     cite.innerText = quotes[index].quoteAuthor;
     li.append(blockquote, cite);
     root.append(li);
+    index++;
   }
-  index = 0
 }
+
+addQuotes();
 
 
 
@@ -22,7 +24,7 @@ document.addEventListener('scroll', () => {
   let scrollTop = document.documentElement.scrollTop;
   let scrollHeight = document.documentElement.scrollHeight;
   let clientHeight = document.documentElement.clientHeight;
-  if (scrollTop + clientHeight >= scrollHeight && index < quotes.length) {
+  if (scrollTop + clientHeight >= scrollHeight && index < quotes.length){
     addQuotes();
   }
 });
