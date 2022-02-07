@@ -2,57 +2,65 @@ let form = document.querySelector("form");
 let ul = document.querySelector("ul");
 
 
-let datas = JSON.parse(localStorage.getItem('cards')) || [];
+let cardData = JSON.parse(localStorage.getItem("cards")) || [];
 
 
 form.addEventListener('submit', (event) => {
     event.preventDefault();
     let title = event.target.elements.title.value;
     let category = event.target.elements.category.value;
-    datas.push({title, category});
-    localStorage.setItem('cards', JSON.stringify(datas));
-    createUI(datas, ul);
+    cardData.push({title, category});
+    localStorage.setItem("cards", JSON.stringify(cardData));
+    createUI(cardData, ul);
 });
 
-function handleEdit(event, info, i, label) {
+
+
+function handleEdit(event, info, id, label) {
     let elm = event.target;
     let input = document.createElement('input');
     input.value = info;
-
     input.addEventListener('keyup', (e) => {
-        if(e.keyCode === 13) {
-            let updated = e.target.value;
-            datas[i][label] = updated;
+        if(e.keyCode === 13){
+            let updatedValue = e.target.value
+            cardData[id][label] = updatedValue;
             createUI();
-            localStorage.setItem('cards', JSON.stringify(datas));
+            localStorage.setItem('cards', JSON.stringify(cardData));
         }
     });
-
     input.addEventListener('blur', (e) => {
-        let updated = e.target.value;
-        datas[i][label] = updated;
+       
+        let updatedValue = e.target.value
+        cardData[id][label] = updatedValue;
         createUI();
-        localStorage.setItem('cards', JSON.stringify(datas));
-    });
+        localStorage.setItem('cards', JSON.stringify(cardData));
+  
+    })
     let parent = event.target.parentElement;
-    parent.replaceChild(input, elm); 
+    parent.replaceChild(input, elm);
+
+    
 }
 
-function createUI(data = datas, root = ul) {
-    root.innerHTML = "";
+function createUI(data=cardData , root = ul) {
+    root.innerHTML = ' ';
     let fragment = new DocumentFragment();
-    data.forEach((card, index) => {
+    data.forEach((cardInfo, index) => {
         let li = document.createElement("li");
-        let h4 = document.createElement("h4");
-        h4.addEventListener('dblclick', (event) => handleEdit(event, card.title, index, 'title'));
-        h4.innerText = card.title;
+        let p = document.createElement("p");
+        p.addEventListener('dblclick',
+        (event) =>
+        handleEdit(event, cardInfo.category, index, 'category'));
+        p.innerText = cardInfo.category;
         let h2 = document.createElement("h2");
-        h2.addEventListener('dblclick', (event) => handleEdit(event, card.category, index, 'category'));
-        h2.innerText = card.category;
-        li.append(h4, h2);
+        h2.addEventListener('dblclick',
+        (event) =>
+        handleEdit(event, cardInfo.title, index, 'title'));
+        h2.innerText = cardInfo.title;
+        li.append(p, h2);
         fragment.appendChild(li);
     });
     root.append(fragment);
 }
 
-createUI(datas, ul);
+createUI(cardData, ul);
